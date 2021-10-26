@@ -4,19 +4,14 @@ import java.util.List;
 
 public class Node {
     private int x,y;
-    private List<Node> children;
+    private int parentIndex;
 
-
-    //constructors
-    public Node(int x, int y, List<Node> children) {
+    public Node(int x, int y, int parentIndex) {
         this.x = x;
         this.y = y;
-        this.children = children;
+        this.parentIndex = parentIndex;
     }
 
-
-
-    // getters & setters
     public int getX() {
         return x;
     }
@@ -33,11 +28,11 @@ public class Node {
         this.y = y;
     }
 
-    public List<Node> getChildren() {
-        return children;
+    public int getParentIndex() {
+        return parentIndex;
     }
 
-    public void setChildren(List<Node> children) {
-        this.children = children;
+    public void setParentIndex(int parent) {
+        this.parentIndex = parent;
     }
 }

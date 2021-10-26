@@ -45,6 +45,14 @@ public class Labyrinth {
         return labyrinth;
     }
 
+    public int getExitX() {
+        return exitX;
+    }
+
+    public int getExitY() {
+        return exitY;
+    }
+  
     public Player getPlayer() {
         return player;
     }
