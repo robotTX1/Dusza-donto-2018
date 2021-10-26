@@ -2,6 +2,7 @@ package com.dusza;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -41,7 +42,7 @@ public class CommandLineInterface {
 
                 if(commandNumber > 0 && commandNumber <= files.size()) {
                     char[][] in = IOHandler.readFile(files.get(commandNumber - 1));
-                    IOHandler.saveFile(workDir.resolve(CURRENT_SAVE_NAME), in);
+                    IOHandler.saveFile(workDir.resolve(CURRENT_SAVE_NAME), Arrays.copyOf(in, in.length));
                     labyrinth.setLabyrinth(in);
                     System.out.println("Beolvasás sikeres!");
                     return;
