@@ -56,4 +56,12 @@ public class Labyrinth {
     public Player getPlayer() {
         return player;
     }
+
+    public void setExitX(int exitX) {
+        this.exitX = exitX;
+    }
+
+    public void setExitY(int exitY) {
+        this.exitY = exitY;
+    }
 }
