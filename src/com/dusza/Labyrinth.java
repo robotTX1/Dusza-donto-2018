@@ -1,8 +1,8 @@
 package com.dusza;
 
 public class Labyrinth {
-    private static final int LABYRINTH_WIDTH = 9;
-    private static final int LABYRINTH_HEIGHT = 9;
+    public static final int LABYRINTH_WIDTH = 9;
+    public static final int LABYRINTH_HEIGHT = 9;
     public static final char WALL_CHAR = '█';
     public static final char PATH_CHAR = ' ';
 
@@ -40,4 +40,11 @@ public class Labyrinth {
         return labyrinth[y][x] == WALL_CHAR;
     }
 
+    public void setLabyrinth(char[][] labyrinth) {
+        this.labyrinth = labyrinth;
+    }
+
+    public char[][] getLabyrinth() {
+        return labyrinth;
+    }
 }
