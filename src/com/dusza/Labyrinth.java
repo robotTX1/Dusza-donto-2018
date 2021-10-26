@@ -7,22 +7,19 @@ public class Labyrinth {
     public static final char PATH_CHAR = ' ';
 
     private char[][] labyrinth = new char[LABYRINTH_HEIGHT][LABYRINTH_WIDTH];
-    private Player player;
+    private final Player player;
     private int exitX;
     private int exitY;
 
     public Labyrinth() {
-        generate();
-    }
-
-    public Labyrinth(char[][] labyrinth) {
-        this.labyrinth = labyrinth;
+        this.player = new Player(this);
     }
 
     public void display() {
         for(int h = 0; h < LABYRINTH_HEIGHT; h++) {
             for(int w = 0; w < LABYRINTH_WIDTH; w++) {
-                System.out.print(labyrinth[h][w]);
+                if(player.getX() == w && player.getY() == h) System.out.print(player.getPlayerDirection());
+                else System.out.print(labyrinth[h][w]);
             }
             System.out.println();
         }
@@ -54,5 +51,9 @@ public class Labyrinth {
 
     public int getExitY() {
         return exitY;
+    }
+  
+    public Player getPlayer() {
+        return player;
     }
 }
