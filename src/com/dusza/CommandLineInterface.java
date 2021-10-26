@@ -1,15 +1,53 @@
 package com.dusza;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class CommandLineInterface {
-    private static List<Command> menuCommandList = new ArrayList<>();
-    private static List<Command> gameCommandList = new ArrayList<>();
+    private final List<Command> menuCommandList = new ArrayList<>();
+    private final List<Command> gameCommandList = new ArrayList<>();
 
-    static {
+    public CommandLineInterface(Labyrinth labyrinth, Path workDir) {
+        this.labyrinth = labyrinth;
+        this.workDir = workDir;
+
+        // Commands
+
         menuCommandList.add(new Command("beolvas", "Létező labirintus betöltése.", () -> {
+            List<Path> files = IOHandler.getFiles(workDir);
+
+            for(int i=0; i<files.size(); i++) {
+                System.out.printf("%d. %s\n", i+1, files.get(i).getFileName());
+            }
+
+            System.out.printf("%d. Vissza\n", files.size()+1);
+
+            String command;
+
+            while(true) {
+                System.out.print("> ");
+                command = input.nextLine().trim();
+
+                if(!command.matches("^\\d$")) {
+                    System.out.println("Hibás bemenet! Csak egy számot adj meg!");
+                    continue;
+                }
+
+                int commandNumber = Integer.parseInt(command);
+
+                if(commandNumber > 0 && commandNumber <= files.size()) {
+                    labyrinth.setLabyrinth(IOHandler.readFile(files.get(commandNumber - 1)));
+                    System.out.println("Beolvasás sikeres!");
+                    return;
+                }
+
+                if(commandNumber == files.size()+1) {
+                    help(menuCommandList);
+                    return;
+                }
+            }
 
         }));
 
@@ -22,12 +60,11 @@ public class CommandLineInterface {
         }));
 
         menuCommandList.add(new Command("kilepes", "Kilépés a játékból.", () -> System.out.println("Köszönöm, hogy használtad a játékot!")));
-
-
     }
 
     private Labyrinth labyrinth;
-    private Scanner input = new Scanner(System.in);
+    private final Scanner input = new Scanner(System.in);
+    private Path workDir;
 
     public void start() {
         System.out.println("Üdv a Dusza labirintus játékban!\n");
@@ -37,7 +74,7 @@ public class CommandLineInterface {
 
         String command;
         while(true) {
-            System.out.print(">");
+            System.out.print("> ");
             command = input.nextLine().trim().toLowerCase();
 
             for(Command c : menuCommandList) {
@@ -54,15 +91,22 @@ public class CommandLineInterface {
                 break;
             }
         }
+
+        input.close();
     }
 
     private void help(List<Command> commandList) {
         for(Command c : commandList) {
             System.out.printf("%s\t-\t%s\n", c.getName(), c.getDescription());
         }
+        System.out.println();
     }
 
     public void startGame() {
 
+    }
+
+    public void setLabyrinth(Labyrinth labyrinth) {
+        this.labyrinth = labyrinth;
     }
 }

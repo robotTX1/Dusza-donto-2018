@@ -1,12 +1,17 @@
 package com.dusza;
 
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
 public class Main {
 
     public static void main(String[] args) {
-	    CommandLineInterface cli = new CommandLineInterface();
+        Labyrinth labyrinth = new Labyrinth();
 
-      cli.start();
+        Path workDir = FileSystems.getDefault().getPath("Data");
+
+	    CommandLineInterface cli = new CommandLineInterface(labyrinth, workDir);
+
+        cli.start();
     }
 }

@@ -4,15 +4,13 @@ package com.dusza;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 public class IOHandler {
     private static final HashMap<Character, Character> charMap = new HashMap<>();
-    private static final int labirintSizeX = 9;
-    private static final int labirintSizeY = 9;
-    private final Path path;
 
     static {
         charMap.put('*','█');
@@ -21,16 +19,11 @@ public class IOHandler {
         charMap.put(' ','.');
     }
 
-    //constructors
-    public IOHandler(Path path) {
-        this.path = path;
-    }
-
     //methods
 
-    public char[][] readFile() {
+    public static char[][] readFile(Path path) {
         List<String> lines = new ArrayList<>();
-        char[][] out = new char[labirintSizeY][labirintSizeX];
+        char[][] out = new char[Labyrinth.LABYRINTH_HEIGHT][Labyrinth.LABYRINTH_WIDTH];
 
         try (BufferedReader reader = Files.newBufferedReader(path)) {
             String strCurrentLine;
@@ -55,11 +48,11 @@ public class IOHandler {
         return out;
     }
 
-    public void saveFile(char[][] table) {
+    public void saveFile(Path path, char[][] table) {
         // table karaktereinek visszakonvertálása
 
-        for (int i = 0; i < labirintSizeY; i++) {
-            for (int j = 0; j < labirintSizeX; j++) {
+        for (int i = 0; i < Labyrinth.LABYRINTH_HEIGHT; i++) {
+            for (int j = 0; j < Labyrinth.LABYRINTH_WIDTH; j++) {
                 table[i][j] = charMap.get(table[i][j]);
             }
         }
@@ -77,17 +70,16 @@ public class IOHandler {
         }
     }
 
-    // getters & setters
+    public static List<Path> getFiles(Path dir) {
+        List<Path> result = new ArrayList<>();
 
-    public Path getPath() {
-        return path;
-    }
-
-    public static int getLabirintSizeX() {
-        return labirintSizeX;
-    }
-
-    public static int getLabirintSizeY() {
-        return labirintSizeY;
+        try(DirectoryStream<Path> stream = Files.newDirectoryStream(dir)) {
+            for(Path p : stream) {
+                if(!Files.isDirectory(p)) result.add(p);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }
