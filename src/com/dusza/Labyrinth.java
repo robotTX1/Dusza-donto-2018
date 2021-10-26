@@ -1,5 +1,7 @@
 package com.dusza;
 
+import java.util.List;
+
 public class Labyrinth {
     public static final int LABYRINTH_WIDTH = 9;
     public static final int LABYRINTH_HEIGHT = 9;
@@ -7,7 +9,7 @@ public class Labyrinth {
     public static final char PATH_CHAR = ' ';
 
     private char[][] labyrinth = new char[LABYRINTH_HEIGHT][LABYRINTH_WIDTH];
-    private final Player player;
+    private Player player;
     private final int exitX = 8;
     private final int exitY = 1;
 
@@ -16,6 +18,9 @@ public class Labyrinth {
     }
 
     public void display() {
+        Tree tree = new Tree(this);
+        List<int[]> moveList = tree.getShortestPath(player.getX(), player.getY());
+
         for(int h = 0; h < LABYRINTH_HEIGHT; h++) {
             for(int w = 0; w < LABYRINTH_WIDTH; w++) {
                 if(player.getX() == w && player.getY() == h) System.out.print(player.getPlayerDirection());
@@ -23,6 +28,7 @@ public class Labyrinth {
             }
             System.out.println();
         }
+        System.out.println("Legrövidebb út: " + (moveList.size()-1));
     }
 
     public void generate() {
@@ -51,8 +57,7 @@ public class Labyrinth {
                 }
             }
         }
-
-        System.out.println(exitX + "  " + exitY);
+        player = new Player(this);
     }
 
     public char[][] getLabyrinth() {
