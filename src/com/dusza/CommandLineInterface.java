@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class CommandLineInterface {
+    private static final String CURRENT_SAVE_NAME = "currentLabyrinth.txt";
+
     private final List<Command> menuCommandList = new ArrayList<>();
     private final List<Command> gameCommandList = new ArrayList<>();
 
@@ -13,7 +15,7 @@ public class CommandLineInterface {
         this.labyrinth = labyrinth;
         this.workDir = workDir;
 
-        // Commands
+        // Menu Commands
 
         menuCommandList.add(new Command("beolvas", "Létező labirintus betöltése.", () -> {
             List<Path> files = IOHandler.getFiles(workDir);
@@ -38,7 +40,9 @@ public class CommandLineInterface {
                 int commandNumber = Integer.parseInt(command);
 
                 if(commandNumber > 0 && commandNumber <= files.size()) {
-                    labyrinth.setLabyrinth(IOHandler.readFile(files.get(commandNumber - 1)));
+                    char[][] in = IOHandler.readFile(files.get(commandNumber - 1));
+                    IOHandler.saveFile(workDir.resolve(CURRENT_SAVE_NAME), in);
+                    labyrinth.setLabyrinth(in);
                     System.out.println("Beolvasás sikeres!");
                     return;
                 }
@@ -51,15 +55,37 @@ public class CommandLineInterface {
 
         }));
 
-        menuCommandList.add(new Command("generalas", "Új labirintus generálása.", () -> {
-
-        }));
+        menuCommandList.add(new Command("generalas", "Új labirintus generálása.", labyrinth::generate));
 
         menuCommandList.add(new Command("betolt", "Megkezdett játék betöltése.", () -> {
+            List<Path> files = IOHandler.getFiles(workDir);
 
+            boolean found = false;
+            for(Path p : files) {
+                if(p.getFileName().toString().equals(CURRENT_SAVE_NAME)){
+                    found = true;
+                    break;
+                }
+            }
+
+            if(found) {
+                char[][] in = IOHandler.readFile(workDir.resolve(CURRENT_SAVE_NAME));
+                labyrinth.setLabyrinth(in);
+                System.out.println("Játék betöltve!");
+            } else {
+                System.out.println("Nem volt még megkezdett játékod!");
+            }
         }));
 
         menuCommandList.add(new Command("kilepes", "Kilépés a játékból.", () -> System.out.println("Köszönöm, hogy használtad a játékot!")));
+
+        // Game Commands
+
+        gameCommandList.add(new Command("", "", () -> {}));
+        gameCommandList.add(new Command("kilepes", "Vissza a menübe, játék befejezése.", () -> {
+
+        }));
+
     }
 
     private Labyrinth labyrinth;
@@ -78,8 +104,10 @@ public class CommandLineInterface {
             command = input.nextLine().trim().toLowerCase();
 
             for(Command c : menuCommandList) {
+                if(c == exit) continue;
                 if(c.getName().equals(command)) {
                     c.run();
+                    startGame();
                     break;
                 }
             }
@@ -103,6 +131,36 @@ public class CommandLineInterface {
     }
 
     public void startGame() {
+        String command;
+
+        Command exit = gameCommandList.get(gameCommandList.size()-1);
+
+        while(true) {
+            System.out.println("\n\n\n\n\n\n\n\n");
+            labyrinth.display();
+            System.out.println();
+
+            System.out.print("> ");
+            command = input.nextLine().trim().toLowerCase();
+
+            for(Command c : gameCommandList) {
+                if(c == exit) continue;
+                if(c.getName().equals(command)) {
+                    c.run();
+                    break;
+                }
+            }
+
+            if(exit.getName().equals(command)) {
+                System.out.println("Játék befejezve.");
+
+
+                break;
+            }
+        }
+
+
+
 
     }
 

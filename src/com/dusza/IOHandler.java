@@ -48,7 +48,7 @@ public class IOHandler {
         return out;
     }
 
-    public void saveFile(Path path, char[][] table) {
+    public static void saveFile(Path path, char[][] table) {
         // table karaktereinek visszakonvertálása
 
         for (int i = 0; i < Labyrinth.LABYRINTH_HEIGHT; i++) {
