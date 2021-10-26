@@ -5,14 +5,8 @@ import java.nio.file.Path;
 public class Main {
 
     public static void main(String[] args) {
-        IOHandler io = new IOHandler(Path.of("Data/labirint.txt"));
+	    CommandLineInterface cli = new CommandLineInterface();
 
-        char[][] lab = io.readFile();
-
-        for (char[] ca : lab) {
-            System.out.println(ca);
-        }
-
-        io.saveFile(lab);
+      cli.start();
     }
 }
