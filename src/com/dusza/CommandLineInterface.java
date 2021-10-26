@@ -82,10 +82,28 @@ public class CommandLineInterface {
 
         // Game Commands
 
-        gameCommandList.add(new Command("", "", () -> {}));
+        Runnable balra = () -> labyrinth.getPlayer().turnLeft();
+        Runnable jobbra = () -> labyrinth.getPlayer().turnRight();
+        Runnable elore = () -> {
+            if(!labyrinth.getPlayer().forward()) {
+                System.out.println("Erre nem tudsz lépni!");
+                System.out.println("Folytatáshoz nyomj meg egy gombot!");
+                input.nextLine();
+            }
+        };
+
+        gameCommandList.add(new Command("balra", "A karakter balra fordul", balra));
+        gameCommandList.add(new Command("b", "A karakter balra fordul, rövid változat", balra));
+        gameCommandList.add(new Command("jobbra", "A karakter jobbra fordul", jobbra));
+        gameCommandList.add(new Command("j", "A karakter jobbra fordul, rövid változat", jobbra));
+        gameCommandList.add(new Command("elore", "A karakter előre lép, ha tud", elore));
+        gameCommandList.add(new Command("e", "A karakter előre lép, ha tud, rövid változat", elore));
+
         gameCommandList.add(new Command("kilepes", "Vissza a menübe, játék befejezése.", () -> {
 
         }));
+
+
 
     }
 
@@ -152,17 +170,32 @@ public class CommandLineInterface {
                 }
             }
 
-            if(exit.getName().equals(command)) {
-                System.out.println("Játék befejezve.");
+            if(labyrinth.isEscaped()) {
+                System.out.println("\n\n\n\nGratulálok, nyertél!");
+                System.out.printf("Lépések száma: %d\n", labyrinth.getPlayer().getMoves());
+                System.out.printf("Legrövidebb út hossza: %d\n", 0);
 
+                System.out.println("Nyomj meg egy gombot a folytatáshoz.");
+                input.nextLine();
+
+                System.out.println("\n\n\n");
+                help(menuCommandList);
 
                 break;
             }
+
+            if(command.equals("help")) {
+                help(gameCommandList);
+                System.out.println("Nyomj meg egy gombot a folytatáshoz.");
+                input.nextLine();
+            }
+
+            if(exit.getName().equals(command)) {
+                System.out.println("Játék befejezve.\n");
+                help(menuCommandList);
+                break;
+            }
         }
-
-
-
-
     }
 
     public void setLabyrinth(Labyrinth labyrinth) {

@@ -47,14 +47,6 @@ public class IOHandler {
     }
 
     public static void saveFile(Path path, char[][] table) {
-        // table karaktereinek visszakonvertálása
-
-//        for (int i = 0; i < Labyrinth.LABYRINTH_HEIGHT; i++) {
-//            for (int j = 0; j < Labyrinth.LABYRINTH_WIDTH; j++) {
-//                table[i][j] = charMap.get(table[i][j]);
-//            }
-//        }
-
         // karakterek kiírása fileba:
 
         try(BufferedWriter writer = Files.newBufferedWriter(path)) {

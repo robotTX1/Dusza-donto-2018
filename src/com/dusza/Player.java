@@ -13,10 +13,12 @@ public class Player {
         directionMap.put(3, '<');
     }
 
-    private int direction = 0;
+    private int direction = 2;
     private int x = 1;
     private int y = 1;
+    private int moves = 0;
     private Labyrinth labyrinth;
+
 
     public Player(Labyrinth labyrinth) {
         this.labyrinth = labyrinth;
@@ -51,8 +53,8 @@ public class Player {
 
     private int getNextY() {
         return switch (direction) {
-            case 0 -> y + 1;
-            case 2 -> y - 1;
+            case 0 -> y - 1;
+            case 2 -> y + 1;
             default -> y;
         };
     }
@@ -62,6 +64,7 @@ public class Player {
 
         this.x = getNextX();
         this.y = getNextY();
+        moves++;
 
         return true;
     }
@@ -76,5 +79,9 @@ public class Player {
 
     public int getY() {
         return y;
+    }
+
+    public int getMoves() {
+        return moves;
     }
 }
