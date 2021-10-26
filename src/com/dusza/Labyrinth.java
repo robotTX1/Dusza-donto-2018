@@ -8,8 +8,8 @@ public class Labyrinth {
 
     private char[][] labyrinth = new char[LABYRINTH_HEIGHT][LABYRINTH_WIDTH];
     private final Player player;
-    private int exitX;
-    private int exitY;
+    private final int exitX = 8;
+    private final int exitY = 1;
 
     public Labyrinth() {
         this.player = new Player(this);
@@ -55,13 +55,5 @@ public class Labyrinth {
   
     public Player getPlayer() {
         return player;
-    }
-
-    public void setExitX(int exitX) {
-        this.exitX = exitX;
-    }
-
-    public void setExitY(int exitY) {
-        this.exitY = exitY;
     }
 }

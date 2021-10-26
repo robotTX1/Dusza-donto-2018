@@ -13,14 +13,11 @@ public class Main {
 
         labyrinth.setLabyrinth(IOHandler.readFile(workDir.resolve("labirint.txt")));
 
-        labyrinth.setExitX(8);
-        labyrinth.setExitY(1);
-
         Tree tree = new Tree(labyrinth);
         for (char[] cA : tree.getLab()) {
             System.out.println(cA);
         }
-        List<int[]> out = tree.getShortestPath(5,2);
+        List<int[]> out = tree.getShortestPath(1,1);
 
         System.out.println(" ");
 	    //CommandLineInterface cli = new CommandLineInterface(labyrinth, workDir);
