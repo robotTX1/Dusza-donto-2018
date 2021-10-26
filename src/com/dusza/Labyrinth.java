@@ -39,6 +39,20 @@ public class Labyrinth {
 
     public void setLabyrinth(char[][] labyrinth) {
         this.labyrinth = labyrinth;
+
+        for(int h=0; h < LABYRINTH_HEIGHT; h++) {
+            for(int w = 0; w < LABYRINTH_WIDTH; w++) {
+                if((w == 0 || w == LABYRINTH_WIDTH-1)) {
+                    if(labyrinth[h][w] == PATH_CHAR) {
+                        exitX = w;
+                        exitY = h;
+                        break;
+                    }
+                }
+            }
+        }
+
+        System.out.println(exitX + "  " + exitY);
     }
 
     public char[][] getLabyrinth() {
