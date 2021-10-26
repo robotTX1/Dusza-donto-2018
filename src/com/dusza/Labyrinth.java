@@ -47,4 +47,12 @@ public class Labyrinth {
     public char[][] getLabyrinth() {
         return labyrinth;
     }
+
+    public int getExitX() {
+        return exitX;
+    }
+
+    public int getExitY() {
+        return exitY;
+    }
 }
