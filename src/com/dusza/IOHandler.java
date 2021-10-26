@@ -43,25 +43,25 @@ public class IOHandler {
 
         }
 
-
-
         return out;
     }
 
     public static void saveFile(Path path, char[][] table) {
         // table karaktereinek visszakonvertálása
 
-        for (int i = 0; i < Labyrinth.LABYRINTH_HEIGHT; i++) {
-            for (int j = 0; j < Labyrinth.LABYRINTH_WIDTH; j++) {
-                table[i][j] = charMap.get(table[i][j]);
-            }
-        }
+//        for (int i = 0; i < Labyrinth.LABYRINTH_HEIGHT; i++) {
+//            for (int j = 0; j < Labyrinth.LABYRINTH_WIDTH; j++) {
+//                table[i][j] = charMap.get(table[i][j]);
+//            }
+//        }
 
         // karakterek kiírása fileba:
 
         try(BufferedWriter writer = Files.newBufferedWriter(path)) {
-            for (char[] cA : table) {
-                writer.write(cA);
+            for (char[] charArr : table) {
+                for(char c : charArr) {
+                    writer.write(charMap.get(c));
+                }
                 writer.write("\n");
             }
 
