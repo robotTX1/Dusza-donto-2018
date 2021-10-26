@@ -61,8 +61,13 @@ public class Tree {
             }
 
             if (i < nodes.size()) {nodeFound = true;} else {
-                posX = free.get(0)[0];
-                posY = free.get(0)[1];
+                if (free.size() == 0) {
+                    posX = breakPoint[0];
+                    posY = breakPoint[1];
+                } else {
+                    posX = free.get(0)[0];
+                    posY = free.get(0)[1];
+                }
                 i = 0;
             }
         }
@@ -87,20 +92,6 @@ public class Tree {
         }
 
         return out;
-        /*
-        i = 0;
-        while (i < out.size() && !(out.get(i)[0] == x && out.get(i)[1]==y)) {
-            i++;
-        }
-        if (i == out.size()) {
-            subListofOut.addAll(out);
-
-        } else {
-
-            return out;
-        }
-
-         */
     }
 
 

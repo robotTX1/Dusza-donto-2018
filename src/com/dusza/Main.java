@@ -10,8 +10,8 @@ public class Main {
 
         Path workDir = FileSystems.getDefault().getPath("Data");
 
-	    CommandLineInterface cli = new CommandLineInterface(labyrinth, workDir);
-
+	      CommandLineInterface cli = new CommandLineInterface(labyrinth, workDir);
+      
         cli.start();
     }
 }
