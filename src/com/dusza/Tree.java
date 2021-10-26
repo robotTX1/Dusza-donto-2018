@@ -13,7 +13,12 @@ public class Tree {
     // constructors
 
     public Tree(Labyrinth labyrinth) {
-        lab = labyrinth.getLabyrinth().clone();
+        lab = new char[Labyrinth.LABYRINTH_HEIGHT][Labyrinth.LABYRINTH_WIDTH];
+        for(int h = 0; h < Labyrinth.LABYRINTH_HEIGHT; h++) {
+            for(int w = 0; w < Labyrinth.LABYRINTH_WIDTH; w++) {
+                lab[h][w] = labyrinth.getLabyrinth()[h][w];
+            }
+        }
         generateTree(labyrinth.getExitX(), labyrinth.getExitY());
     }
 

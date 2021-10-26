@@ -171,9 +171,12 @@ public class CommandLineInterface {
             }
 
             if(labyrinth.isEscaped()) {
+                Tree tree = new Tree(labyrinth);
+                List<int[]> list = tree.getShortestPath(1,1);
+
                 System.out.println("\n\n\n\nGratulálok, nyertél!");
                 System.out.printf("Lépések száma: %d\n", labyrinth.getPlayer().getMoves());
-                System.out.printf("Legrövidebb út hossza: %d\n", 0);
+                System.out.printf("Legrövidebb út hossza: %d\n", list.size()-1);
 
                 System.out.println("Nyomj meg egy gombot a folytatáshoz.");
                 input.nextLine();

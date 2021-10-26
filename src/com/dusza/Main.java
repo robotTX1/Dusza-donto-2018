@@ -2,7 +2,6 @@ package com.dusza;
 
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.util.List;
 
 public class Main {
 
@@ -11,20 +10,8 @@ public class Main {
 
         Path workDir = FileSystems.getDefault().getPath("Data");
 
-        labyrinth.setLabyrinth(IOHandler.readFile(workDir.resolve("labirint.txt")));
+	    CommandLineInterface cli = new CommandLineInterface(labyrinth, workDir);
 
-        labyrinth.setExitX(8);
-        labyrinth.setExitY(1);
-
-        Tree tree = new Tree(labyrinth);
-        for (char[] cA : tree.getLab()) {
-            System.out.println(cA);
-        }
-        List<int[]> out = tree.getShortestPath(5,2);
-
-        System.out.println(" ");
-	    //CommandLineInterface cli = new CommandLineInterface(labyrinth, workDir);
-
-        //cli.start();
+        cli.start();
     }
 }
