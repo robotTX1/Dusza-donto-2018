@@ -4,20 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Player {
-    private static Map<Integer, Character> directionMap = new HashMap<>();
+    private static final Map<Integer, Character> DIRECTION_MAP = new HashMap<>();
 
     static {
-        directionMap.put(0, '^');
-        directionMap.put(1, '>');
-        directionMap.put(2, 'V');
-        directionMap.put(3, '<');
+        DIRECTION_MAP.put(0, '^');
+        DIRECTION_MAP.put(1, '>');
+        DIRECTION_MAP.put(2, 'V');
+        DIRECTION_MAP.put(3, '<');
     }
 
     private int direction = 2;
-    private int x = 1;
-    private int y = 1;
+    private int x = Labyrinth.START_X;
+    private int y = Labyrinth.START_Y;
     private int moves = 0;
-    private Labyrinth labyrinth;
+    private final Labyrinth labyrinth;
 
 
     public Player(Labyrinth labyrinth) {
@@ -25,7 +25,11 @@ public class Player {
     }
 
     public char getPlayerDirection() {
-        return directionMap.get(direction);
+        return DIRECTION_MAP.get(direction);
+    }
+
+    public int getPlayerDirectionInt() {
+        return direction;
     }
 
     public void turnLeft() {
@@ -39,8 +43,7 @@ public class Player {
     }
 
     public void turn(int dir) {
-        if(dir > 0) turnRight();
-        if(dir < 0) turnLeft();
+        this.direction = dir;
     }
 
     private int getNextX() {
@@ -67,10 +70,6 @@ public class Player {
         moves++;
 
         return true;
-    }
-
-    public static Map<Integer, Character> getDirectionMap() {
-        return directionMap;
     }
 
     public int getX() {

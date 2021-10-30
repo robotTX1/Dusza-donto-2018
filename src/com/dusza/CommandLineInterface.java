@@ -12,6 +12,11 @@ public class CommandLineInterface {
     private final List<Command> menuCommandList = new ArrayList<>();
     private final List<Command> gameCommandList = new ArrayList<>();
 
+    private final Labyrinth labyrinth;
+    private final Scanner input = new Scanner(System.in);
+    private final Path workDir;
+    private Pathfinding pathfinding;
+
     public CommandLineInterface(Labyrinth labyrinth, Path workDir) {
         this.labyrinth = labyrinth;
         this.workDir = workDir;
@@ -56,7 +61,10 @@ public class CommandLineInterface {
 
         }));
 
-        menuCommandList.add(new Command("generalas", "Új labirintus generálása.", labyrinth::generate));
+        menuCommandList.add(new Command("generalas", "Új labirintus generálása.", () -> {
+            labyrinth.generateNewLabyrinth();
+            IOHandler.saveFile(workDir.resolve(CURRENT_SAVE_NAME), labyrinth.getLabyrinth());
+        }));
 
         menuCommandList.add(new Command("betolt", "Megkezdett játék betöltése.", () -> {
             List<Path> files = IOHandler.getFiles(workDir);
@@ -82,9 +90,9 @@ public class CommandLineInterface {
 
         // Game Commands
 
-        Runnable balra = () -> labyrinth.getPlayer().turnLeft();
-        Runnable jobbra = () -> labyrinth.getPlayer().turnRight();
-        Runnable elore = () -> {
+        Runnable left = () -> labyrinth.getPlayer().turnLeft();
+        Runnable right = () -> labyrinth.getPlayer().turnRight();
+        Runnable forward = () -> {
             if(!labyrinth.getPlayer().forward()) {
                 System.out.println("Erre nem tudsz lépni!");
                 System.out.println("Folytatáshoz nyomj meg egy gombot!");
@@ -92,24 +100,59 @@ public class CommandLineInterface {
             }
         };
 
-        gameCommandList.add(new Command("balra", "A karakter balra fordul", balra));
-        gameCommandList.add(new Command("b", "A karakter balra fordul, rövid változat", balra));
-        gameCommandList.add(new Command("jobbra", "A karakter jobbra fordul", jobbra));
-        gameCommandList.add(new Command("j", "A karakter jobbra fordul, rövid változat", jobbra));
-        gameCommandList.add(new Command("elore", "A karakter előre lép, ha tud", elore));
-        gameCommandList.add(new Command("e", "A karakter előre lép, ha tud, rövid változat", elore));
+        Runnable automatic = () -> {
+            Player player = labyrinth.getPlayer();
+            List<PathNode> route = pathfinding.findPath(player.getX(), player.getY(), labyrinth.getExitX(), labyrinth.getExitY());
 
-        gameCommandList.add(new Command("kilepes", "Vissza a menübe, játék befejezése.", () -> {
+            PathNode nextStep = route.get(1);
 
-        }));
+            int moveDirX = player.getX() - nextStep.getX();
+            int moveDirY = player.getY() - nextStep.getY();
 
+            int dir = 0;
+            if(moveDirX == 1) dir = 3;
+            if(moveDirX == -1) dir = 1;
+            if(moveDirY == 1) dir = 0;
+            if(moveDirY == -1) dir = 2;
 
+            if(dir != player.getPlayerDirectionInt()) {
+                player.turn(dir);
+                displayLabyrinth();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
 
+            player.forward();
+        };
+
+        Runnable fullyAutomatic = () -> {
+            while(!labyrinth.isEscaped()) {
+                automatic.run();
+                displayLabyrinth();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        gameCommandList.add(new Command("balra", "A karakter balra fordul", left));
+        gameCommandList.add(new Command("b", "A karakter balra fordul, rövid változat", left));
+        gameCommandList.add(new Command("jobbra", "A karakter jobbra fordul", right));
+        gameCommandList.add(new Command("j", "A karakter jobbra fordul, rövid változat", right));
+        gameCommandList.add(new Command("elore", "A karakter előre lép, ha tud", forward));
+        gameCommandList.add(new Command("e", "A karakter előre lép, ha tud, rövid változat", forward));
+        gameCommandList.add(new Command("automata", "A karakter lép egyet a kijárat felé.", automatic));
+        gameCommandList.add(new Command("a", "A karakter lép egyet a kijárat felé, rövid változat.", automatic));
+        gameCommandList.add(new Command("fullAutomata", "A karakter végig megy a labirintuson", fullyAutomatic));
+        gameCommandList.add(new Command("fa", "A karakter végig megy a labirintuson, rövid verzió", fullyAutomatic));
+
+        gameCommandList.add(new Command("kilepes", "Vissza a menübe, játék befejezése.", () -> {}));
     }
-
-    private Labyrinth labyrinth;
-    private final Scanner input = new Scanner(System.in);
-    private Path workDir;
 
     public void start() {
         System.out.println("Üdv a Dusza labirintus játékban!\n");
@@ -154,10 +197,11 @@ public class CommandLineInterface {
 
         Command exit = gameCommandList.get(gameCommandList.size()-1);
 
+        pathfinding = new Pathfinding(labyrinth.getLabyrinth());
+        int fastestRoute = pathfinding.findPath(Labyrinth.START_X, Labyrinth.START_Y, labyrinth.getExitX(), labyrinth.getExitY()).size() - 1;
+
         while(true) {
-            System.out.println("\n\n\n\n\n\n\n\n");
-            labyrinth.display();
-            System.out.println();
+            displayLabyrinth();
 
             System.out.print("> ");
             command = input.nextLine().trim().toLowerCase();
@@ -171,12 +215,9 @@ public class CommandLineInterface {
             }
 
             if(labyrinth.isEscaped()) {
-                Tree tree = new Tree(labyrinth);
-                List<int[]> list = tree.getShortestPath(1,1);
-
                 System.out.println("\n\n\n\nGratulálok, nyertél!");
                 System.out.printf("Lépések száma: %d\n", labyrinth.getPlayer().getMoves());
-                System.out.printf("Legrövidebb út hossza: %d\n", list.size()-1);
+                System.out.printf("Legrövidebb út hossza: %d\n", fastestRoute);
 
                 System.out.println("Nyomj meg egy gombot a folytatáshoz.");
                 input.nextLine();
@@ -201,7 +242,13 @@ public class CommandLineInterface {
         }
     }
 
-    public void setLabyrinth(Labyrinth labyrinth) {
-        this.labyrinth = labyrinth;
+    private void displayLabyrinth() {
+        Player player = labyrinth.getPlayer();
+        int fastestRoute = pathfinding.findPath(player.getX(), player.getY(), labyrinth.getExitX(), labyrinth.getExitY()).size() - 1;
+
+        System.out.println("\n\n\n\n\n\n\n\n");
+        labyrinth.display();
+
+        System.out.printf("Legrövidebb út: %d\n", fastestRoute);
     }
 }
