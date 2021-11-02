@@ -61,8 +61,8 @@ public class Labyrinth {
             int[] directionToTry = allDirections.get(0);
             allDirections.remove(0);
 
-            int nodeX = x + (directionToTry[0] * 2);
-            int nodeY = y + (directionToTry[1] * 2);
+            int nodeX = x + (directionToTry[0] * 2); // 1
+            int nodeY = y + (directionToTry[1] * 2); // 1 + (-2)
 
             if(isWall(nodeX, nodeY)) {
                 int linkCellX = x + directionToTry[0];
@@ -133,7 +133,7 @@ public class Labyrinth {
 
         for(int h=0; h < LABYRINTH_HEIGHT; h++) {
             for(int w = 0; w < LABYRINTH_WIDTH; w++) {
-                if((w == 0 || w == LABYRINTH_WIDTH-1)) {
+                if((w == 0 || w == LABYRINTH_WIDTH-1) || (h == 0 || h == LABYRINTH_HEIGHT-1)) {
                     if(labyrinth[h][w] == PATH_CHAR) {
                         exitX = w;
                         exitY = h;

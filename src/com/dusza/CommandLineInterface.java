@@ -16,6 +16,7 @@ public class CommandLineInterface {
     private final Scanner input = new Scanner(System.in);
     private final Path workDir;
     private Pathfinding pathfinding;
+    private boolean startGame = true;
 
     public CommandLineInterface(Labyrinth labyrinth, Path workDir) {
         this.labyrinth = labyrinth;
@@ -55,6 +56,7 @@ public class CommandLineInterface {
 
                 if(commandNumber == files.size()+1) {
                     help(menuCommandList);
+                    startGame = false;
                     return;
                 }
             }
@@ -169,7 +171,8 @@ public class CommandLineInterface {
                 if(c == exit) continue;
                 if(c.getName().equals(command)) {
                     c.run();
-                    startGame();
+                    if(startGame) startGame();
+                    startGame = true;
                     break;
                 }
             }
