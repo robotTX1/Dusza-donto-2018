@@ -84,6 +84,7 @@ public class CommandLineInterface {
                 labyrinth.setLabyrinth(in);
                 System.out.println("Játék betöltve!");
             } else {
+                startGame = false;
                 System.out.println("Nem volt még megkezdett játékod!");
             }
         }));
